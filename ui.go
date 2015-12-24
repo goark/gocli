@@ -18,7 +18,7 @@ type UI struct {
 	ErrorWriter io.Writer
 }
 
-// NewUI returns a new Context instance
+// NewUI returns a new UI instance
 func NewUI() *UI {
 	return &UI{Reader: os.Stdin, Writer: os.Stdout, ErrorWriter: os.Stderr}
 }
