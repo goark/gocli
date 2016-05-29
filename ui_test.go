@@ -33,56 +33,60 @@ func TestMain(m *testing.M) {
 }
 
 func TestUiOutput(t *testing.T) {
+	r := strings.NewReader(inputMsg)
 	outBuf := new(bytes.Buffer)
-	ui := &UI{Writer: outBuf}
+	ui := NewUI(r, outBuf, nil)
 
-	ui.Output(inputMsg)
+	inBuf := make([]byte, 1024)
+	len, _ := ui.Reader().Read(inBuf)
+
+	ui.Output(string(inBuf[:len]))
 	result := outBuf.String()
 	if result != inputMsg {
-		t.Errorf("CliUi.Output = \"%s\", want \"%s\".", result, inputMsg)
+		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg)
 	}
 }
 
 func TestUiOutputln(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := &UI{Writer: outBuf}
+	ui := NewUI(nil, outBuf, nil)
 
 	ui.Outputln(inputMsg)
 	result := outBuf.String()
 	if result != inputMsg+"\n" {
-		t.Errorf("CliUi.Output = \"%s\", want \"%s\".", result, inputMsg+"\n")
+		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg+"\n")
 	}
 }
 
 func TestUiOutputBytes(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := &UI{Writer: outBuf}
+	ui := NewUI(nil, outBuf, nil)
 
 	ui.OutputBytes([]byte(inputMsg))
 	result := outBuf.String()
 	if result != inputMsg {
-		t.Errorf("CliUi.Output = \"%s\", want \"%s\".", result, inputMsg)
+		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg)
 	}
 }
 
 func TestUiOutputErr(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := &UI{ErrorWriter: outBuf}
+	ui := NewUI(nil, nil, outBuf)
 
 	ui.OutputErr(inputMsg)
 	result := outBuf.String()
 	if result != inputMsg {
-		t.Errorf("CliUi.OutputErr = \"%s\", want \"%s\".", result, inputMsg)
+		t.Errorf("UI.OutputErr = \"%s\", want \"%s\".", result, inputMsg)
 	}
 }
 
 func TestUiOutputErrln(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := &UI{ErrorWriter: outBuf}
+	ui := NewUI(nil, nil, outBuf)
 
 	ui.OutputErrln(inputMsg)
 	result := outBuf.String()
 	if result != inputMsg+"\n" {
-		t.Errorf("CliUi.OutputErr = \"%s\", want \"%s\".", result, inputMsg+"\n")
+		t.Errorf("UI.OutputErr = \"%s\", want \"%s\".", result, inputMsg+"\n")
 	}
 }

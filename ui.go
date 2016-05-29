@@ -6,59 +6,74 @@ package gocli
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
-	"os"
+	"io/ioutil"
 )
 
 // UI is Command line user interface
 type UI struct {
-	Reader      io.Reader
-	Writer      io.Writer
-	ErrorWriter io.Writer
+	reader      io.Reader
+	writer      io.Writer
+	errorWriter io.Writer
 }
 
 // NewUI returns a new UI instance
-func NewUI() *UI {
-	return &UI{Reader: os.Stdin, Writer: os.Stdout, ErrorWriter: os.Stderr}
+func NewUI(r io.Reader, w, e io.Writer) *UI {
+	if r == nil {
+		r = ioutil.NopCloser(bytes.NewReader(nil))
+	}
+	if w == nil {
+		w = ioutil.Discard
+	}
+	if e == nil {
+		e = ioutil.Discard
+	}
+	return &UI{reader: r, writer: w, errorWriter: e}
 }
 
-//Output to Writer stream.
+//Reader returns io.Reader stream
+func (c *UI) Reader() io.Reader {
+	return c.reader
+}
+
+//Output to writer stream.
 func (c *UI) Output(val ...interface{}) error {
-	return doOutput(c.Writer, val)
+	return doOutput(c.writer, val)
 }
 
-//Outputln to Writer stream (add line-ending).
+//Outputln to writer stream (add line-ending).
 func (c *UI) Outputln(val ...interface{}) error {
-	return doOutputln(c.Writer, val)
+	return doOutputln(c.writer, val)
 }
 
-//OutputBytes to Writer stream ([]byte data).
+//OutputBytes to writer stream ([]byte data).
 func (c *UI) OutputBytes(data []byte) error {
-	writer := bufio.NewWriter(c.Writer)
+	writer := bufio.NewWriter(c.writer)
 	if _, err := writer.Write(data); err != nil {
 		return err
 	}
 	return writer.Flush()
 }
 
-//OutputErr to ErrorWriter stream.
+//OutputErr to errorWriter stream.
 func (c *UI) OutputErr(val ...interface{}) error {
-	return doOutput(c.ErrorWriter, val)
+	return doOutput(c.errorWriter, val)
 }
 
-//OutputErrln to ErrorWriter stream (add line-ending).
+//OutputErrln to errorWriter stream (add line-ending).
 func (c *UI) OutputErrln(val ...interface{}) error {
-	return doOutputln(c.ErrorWriter, val)
+	return doOutputln(c.errorWriter, val)
 }
 
-//Output to ErrorWriter stream.
+//Output to io.Writer stream.
 func doOutput(writer io.Writer, val []interface{}) error {
 	_, err := fmt.Fprint(writer, val...)
 	return err
 }
 
-//Output to ErrorWriter stream (add line-ending).
+//Output to io.Writer stream (add line-ending).
 func doOutputln(writer io.Writer, val []interface{}) error {
 	_, err := fmt.Fprintln(writer, val...)
 	return err
