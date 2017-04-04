@@ -35,7 +35,7 @@ func TestMain(m *testing.M) {
 func TestUiOutput(t *testing.T) {
 	r := strings.NewReader(inputMsg)
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(r, outBuf, nil)
+	ui := NewUI(Reader(r), Writer(outBuf))
 
 	inBuf := make([]byte, 1024)
 	len, _ := ui.Reader().Read(inBuf)
@@ -49,7 +49,7 @@ func TestUiOutput(t *testing.T) {
 
 func TestUiOutputln(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(nil, outBuf, nil)
+	ui := NewUI(Writer(outBuf))
 
 	ui.Outputln(inputMsg)
 	result := outBuf.String()
@@ -60,7 +60,7 @@ func TestUiOutputln(t *testing.T) {
 
 func TestUiOutputBytes(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(nil, outBuf, nil)
+	ui := NewUI(Writer(outBuf))
 
 	ui.OutputBytes([]byte(inputMsg))
 	result := outBuf.String()
@@ -71,7 +71,7 @@ func TestUiOutputBytes(t *testing.T) {
 
 func TestUiOutputErr(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(nil, nil, outBuf)
+	ui := NewUI(ErrorWriter(outBuf))
 
 	ui.OutputErr(inputMsg)
 	result := outBuf.String()
@@ -82,7 +82,7 @@ func TestUiOutputErr(t *testing.T) {
 
 func TestUiOutputErrln(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(nil, nil, outBuf)
+	ui := NewUI(ErrorWriter(outBuf))
 
 	ui.OutputErrln(inputMsg)
 	result := outBuf.String()
