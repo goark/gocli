@@ -19,18 +19,23 @@ type UI struct {
 	errorWriter io.Writer
 }
 
-//self-referential function for functional options pattern
-type option func(*UI)
+//OptFunc is self-referential function for functional options pattern
+type OptFunc func(*UI)
 
 // NewUI returns a new UI instance
-func NewUI(opts ...option) *UI {
+func NewUI(opts ...OptFunc) *UI {
 	c := &UI{reader: ioutil.NopCloser(bytes.NewReader(nil)), writer: ioutil.Discard, errorWriter: ioutil.Discard}
-	c.Option(opts...)
+	c.options(opts...)
 	return c
 }
+func (c *UI) options(opts ...OptFunc) {
+	for _, opt := range opts {
+		opt(c)
+	}
+}
 
-//Reader returns closure as type option
-func Reader(r io.Reader) option {
+//Reader returns closure as type OptFunc
+func Reader(r io.Reader) OptFunc {
 	return func(c *UI) {
 		if r != nil {
 			c.reader = r
@@ -39,8 +44,8 @@ func Reader(r io.Reader) option {
 	}
 }
 
-//Writer returns closure as type option
-func Writer(w io.Writer) option {
+//Writer returns closure as type OptFunc
+func Writer(w io.Writer) OptFunc {
 	return func(c *UI) {
 		if w != nil {
 			c.writer = w
@@ -48,19 +53,12 @@ func Writer(w io.Writer) option {
 	}
 }
 
-//ErrorWriter returns closure as type option
-func ErrorWriter(e io.Writer) option {
+//ErrorWriter returns closure as type OptFunc
+func ErrorWriter(e io.Writer) OptFunc {
 	return func(c *UI) {
 		if e != nil {
 			c.errorWriter = e
 		}
-	}
-}
-
-//Option sets options to UI.
-func (c *UI) Option(opts ...option) {
-	for _, opt := range opts {
-		opt(c)
 	}
 }
 
