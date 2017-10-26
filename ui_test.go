@@ -90,3 +90,14 @@ func TestUiOutputErrln(t *testing.T) {
 		t.Errorf("UI.OutputErr = \"%s\", want \"%s\".", result, inputMsg+"\n")
 	}
 }
+
+func TestUiOutputErrBytes(t *testing.T) {
+	outBuf := new(bytes.Buffer)
+	ui := NewUI(ErrorWriter(outBuf))
+
+	ui.OutputErrBytes([]byte(inputMsg))
+	result := outBuf.String()
+	if result != inputMsg {
+		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg)
+	}
+}

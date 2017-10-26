@@ -5,7 +5,6 @@
 package gocli
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
 	"io"
@@ -79,11 +78,13 @@ func (c *UI) Outputln(val ...interface{}) error {
 
 //OutputBytes to writer stream ([]byte data).
 func (c *UI) OutputBytes(data []byte) error {
-	writer := bufio.NewWriter(c.writer)
-	if _, err := writer.Write(data); err != nil {
-		return err
-	}
-	return writer.Flush()
+	return c.WriteFrom(bytes.NewReader(data))
+}
+
+//WriteFrom write from io.Reader to UI.writer
+func (c *UI) WriteFrom(r io.Reader) error {
+	_, err := io.Copy(c.writer, r)
+	return err
 }
 
 //OutputErr to errorWriter stream.
@@ -94,6 +95,17 @@ func (c *UI) OutputErr(val ...interface{}) error {
 //OutputErrln to errorWriter stream (add line-ending).
 func (c *UI) OutputErrln(val ...interface{}) error {
 	return doOutputln(c.errorWriter, val)
+}
+
+//OutputErrBytes to writer stream ([]byte data).
+func (c *UI) OutputErrBytes(data []byte) error {
+	return c.WriteErrFrom(bytes.NewReader(data))
+}
+
+//WriteErrFrom write from io.Reader to UI.writer
+func (c *UI) WriteErrFrom(r io.Reader) error {
+	_, err := io.Copy(c.errorWriter, r)
+	return err
 }
 
 //Output to io.Writer stream.
