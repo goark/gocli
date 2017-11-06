@@ -39,7 +39,6 @@ func Reader(r io.Reader) OptFunc {
 		if r != nil {
 			c.reader = r
 		}
-
 	}
 }
 
@@ -64,6 +63,16 @@ func ErrorWriter(e io.Writer) OptFunc {
 //Reader returns io.Reader stream
 func (c *UI) Reader() io.Reader {
 	return c.reader
+}
+
+//Writer returns io.Writer stream for stdout
+func (c *UI) Writer() io.Writer {
+	return c.writer
+}
+
+//ErrorWriter returns io.Writer stream for stderr
+func (c *UI) ErrorWriter() io.Writer {
+	return c.errorWriter
 }
 
 //Output to writer stream.

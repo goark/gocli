@@ -2,6 +2,7 @@ package gocli
 
 import (
 	"bytes"
+	"io"
 	"os"
 	"runtime"
 	"strings"
@@ -33,14 +34,10 @@ func TestMain(m *testing.M) {
 }
 
 func TestUiOutput(t *testing.T) {
-	r := strings.NewReader(inputMsg)
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(Reader(r), Writer(outBuf))
+	ui := NewUI(Writer(outBuf))
 
-	inBuf := make([]byte, 1024)
-	len, _ := ui.Reader().Read(inBuf)
-
-	ui.Output(string(inBuf[:len]))
+	ui.Output(inputMsg)
 	result := outBuf.String()
 	if result != inputMsg {
 		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg)
@@ -54,7 +51,7 @@ func TestUiOutputln(t *testing.T) {
 	ui.Outputln(inputMsg)
 	result := outBuf.String()
 	if result != inputMsg+"\n" {
-		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg+"\n")
+		t.Errorf("UI.Outputln = \"%s\", want \"%s\".", result, inputMsg+"\n")
 	}
 }
 
@@ -65,7 +62,7 @@ func TestUiOutputBytes(t *testing.T) {
 	ui.OutputBytes([]byte(inputMsg))
 	result := outBuf.String()
 	if result != inputMsg {
-		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg)
+		t.Errorf("UI.OutputBytes = \"%s\", want \"%s\".", result, inputMsg)
 	}
 }
 
@@ -87,7 +84,7 @@ func TestUiOutputErrln(t *testing.T) {
 	ui.OutputErrln(inputMsg)
 	result := outBuf.String()
 	if result != inputMsg+"\n" {
-		t.Errorf("UI.OutputErr = \"%s\", want \"%s\".", result, inputMsg+"\n")
+		t.Errorf("UI.OutputErrln = \"%s\", want \"%s\".", result, inputMsg+"\n")
 	}
 }
 
@@ -98,6 +95,42 @@ func TestUiOutputErrBytes(t *testing.T) {
 	ui.OutputErrBytes([]byte(inputMsg))
 	result := outBuf.String()
 	if result != inputMsg {
-		t.Errorf("UI.Output = \"%s\", want \"%s\".", result, inputMsg)
+		t.Errorf("UI.OutputErrBytes = \"%s\", want \"%s\".", result, inputMsg)
+	}
+}
+
+func TestUiReader(t *testing.T) {
+	r := strings.NewReader(inputMsg)
+	ui := NewUI(Reader(r))
+
+	inBuf := new(bytes.Buffer)
+	io.Copy(inBuf, ui.Reader())
+	result := inBuf.String()
+	if result != inputMsg {
+		t.Errorf("UI.Reader = \"%s\", want \"%s\".", result, inputMsg)
+	}
+}
+
+func TestUiWriter(t *testing.T) {
+	r := strings.NewReader(inputMsg)
+	outBuf := new(bytes.Buffer)
+	ui := NewUI(Reader(r), Writer(outBuf))
+
+	io.Copy(ui.Writer(), ui.Reader())
+	result := outBuf.String()
+	if result != inputMsg {
+		t.Errorf("UI.Writer = \"%s\", want \"%s\".", result, inputMsg)
+	}
+}
+
+func TestUiErrorWriter(t *testing.T) {
+	r := strings.NewReader(inputMsg)
+	outBuf := new(bytes.Buffer)
+	ui := NewUI(Reader(r), ErrorWriter(outBuf))
+
+	io.Copy(ui.ErrorWriter(), ui.Reader())
+	result := outBuf.String()
+	if result != inputMsg {
+		t.Errorf("UI.ErrorWriter = \"%s\", want \"%s\".", result, inputMsg)
 	}
 }
