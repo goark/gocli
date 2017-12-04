@@ -24,13 +24,10 @@ type OptFunc func(*UI)
 // NewUI returns a new UI instance
 func NewUI(opts ...OptFunc) *UI {
 	c := &UI{reader: ioutil.NopCloser(bytes.NewReader(nil)), writer: ioutil.Discard, errorWriter: ioutil.Discard}
-	c.options(opts...)
-	return c
-}
-func (c *UI) options(opts ...OptFunc) {
 	for _, opt := range opts {
 		opt(c)
 	}
+	return c
 }
 
 //Reader returns closure as type OptFunc
