@@ -1,4 +1,4 @@
-package gocli
+package rwi
 
 import (
 	"bytes"
@@ -35,7 +35,7 @@ func TestMain(m *testing.M) {
 
 func TestUiOutput(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(Writer(outBuf))
+	ui := New(Writer(outBuf))
 
 	ui.Output(inputMsg)
 	result := outBuf.String()
@@ -46,7 +46,7 @@ func TestUiOutput(t *testing.T) {
 
 func TestUiOutputln(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(Writer(outBuf))
+	ui := New(Writer(outBuf))
 
 	ui.Outputln(inputMsg)
 	result := outBuf.String()
@@ -57,7 +57,7 @@ func TestUiOutputln(t *testing.T) {
 
 func TestUiOutputBytes(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(Writer(outBuf))
+	ui := New(Writer(outBuf))
 
 	ui.OutputBytes([]byte(inputMsg))
 	result := outBuf.String()
@@ -68,7 +68,7 @@ func TestUiOutputBytes(t *testing.T) {
 
 func TestUiOutputErr(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(ErrorWriter(outBuf))
+	ui := New(ErrorWriter(outBuf))
 
 	ui.OutputErr(inputMsg)
 	result := outBuf.String()
@@ -79,7 +79,7 @@ func TestUiOutputErr(t *testing.T) {
 
 func TestUiOutputErrln(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(ErrorWriter(outBuf))
+	ui := New(ErrorWriter(outBuf))
 
 	ui.OutputErrln(inputMsg)
 	result := outBuf.String()
@@ -90,7 +90,7 @@ func TestUiOutputErrln(t *testing.T) {
 
 func TestUiOutputErrBytes(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(ErrorWriter(outBuf))
+	ui := New(ErrorWriter(outBuf))
 
 	ui.OutputErrBytes([]byte(inputMsg))
 	result := outBuf.String()
@@ -101,7 +101,7 @@ func TestUiOutputErrBytes(t *testing.T) {
 
 func TestUiReader(t *testing.T) {
 	r := strings.NewReader(inputMsg)
-	ui := NewUI(Reader(r))
+	ui := New(Reader(r))
 
 	inBuf := new(bytes.Buffer)
 	io.Copy(inBuf, ui.Reader())
@@ -114,7 +114,7 @@ func TestUiReader(t *testing.T) {
 func TestUiWriter(t *testing.T) {
 	r := strings.NewReader(inputMsg)
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(Reader(r), Writer(outBuf))
+	ui := New(Reader(r), Writer(outBuf))
 
 	io.Copy(ui.Writer(), ui.Reader())
 	result := outBuf.String()
@@ -126,7 +126,7 @@ func TestUiWriter(t *testing.T) {
 func TestUiErrorWriter(t *testing.T) {
 	r := strings.NewReader(inputMsg)
 	outBuf := new(bytes.Buffer)
-	ui := NewUI(Reader(r), ErrorWriter(outBuf))
+	ui := New(Reader(r), ErrorWriter(outBuf))
 
 	io.Copy(ui.ErrorWriter(), ui.Reader())
 	result := outBuf.String()
