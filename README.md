@@ -34,9 +34,9 @@ func run(ui *rwi.RWI) exitcode.ExitCode {
 
 func main() {
     run(rwi.New(
-        rwi.Reader(os.Stdin),
-        rwi.Writer(os.Stdout),
-        rwi.ErrorWriter(os.Stderr),
+        rwi.WithReader(os.Stdin),
+        rwi.WithWriter(os.Stdout),
+        rwi.WithErrorWriter(os.Stderr),
     )).Exit()
 }
 ```
