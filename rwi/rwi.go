@@ -30,8 +30,8 @@ func New(opts ...OptFunc) *RWI {
 	return c
 }
 
-//Reader returns closure as type OptFunc
-func Reader(r io.Reader) OptFunc {
+//WithReader returns function for setting Reader
+func WithReader(r io.Reader) OptFunc {
 	return func(c *RWI) {
 		if r != nil {
 			c.reader = r
@@ -39,8 +39,8 @@ func Reader(r io.Reader) OptFunc {
 	}
 }
 
-//Writer returns closure as type OptFunc
-func Writer(w io.Writer) OptFunc {
+//WithWriter returns function for setting Writer
+func WithWriter(w io.Writer) OptFunc {
 	return func(c *RWI) {
 		if w != nil {
 			c.writer = w
@@ -48,8 +48,8 @@ func Writer(w io.Writer) OptFunc {
 	}
 }
 
-//ErrorWriter returns closure as type OptFunc
-func ErrorWriter(e io.Writer) OptFunc {
+//WithErrorWriter returns function for setting Writer (error)
+func WithErrorWriter(e io.Writer) OptFunc {
 	return func(c *RWI) {
 		if e != nil {
 			c.errorWriter = e
