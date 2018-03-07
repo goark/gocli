@@ -22,7 +22,7 @@ func TestUiSearch(t *testing.T) {
 		{path: "test*/**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 		{path: "**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 		{path: "./**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
-		{path: "**/../**/*.[ch]", result: []string{"../file/testdata/include/source.h", "../file/testdata/source.c", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "**/../**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 	}
 	for _, tc := range testCases {
 		str := Search(tc.path, NewSearchOption(
@@ -49,7 +49,7 @@ func TestUiSearchFileOnly(t *testing.T) {
 		{path: "test*/**/XXX", result: []string{}},
 		{path: "**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 		{path: "./**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
-		{path: "**/../**/*.[ch]", result: []string{"../file/testdata/include/source.h", "../file/testdata/source.c", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "**/../**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 	}
 	for _, tc := range testCases {
 		str := Search(tc.path, NewSearchOption(

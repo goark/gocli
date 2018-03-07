@@ -106,10 +106,12 @@ func getPathsNext(root, path string) []string {
 		paths := []string{}
 		if ps, err := filepath.Glob(root + path); err == nil {
 			for _, p := range ps {
-				if info, err := os.Stat(p); err == nil {
-					mode := info.Mode()
-					if (dirFlag && (mode&os.ModeDir) != 0) || !dirFlag {
-						paths = append(paths, normalizePath(p, mode))
+				if abs, err := filepath.Abs(p); err == nil {
+					if info, err := os.Stat(abs); err == nil {
+						mode := info.Mode()
+						if (dirFlag && (mode&os.ModeDir) != 0) || !dirFlag {
+							paths = append(paths, normalizePath(abs, mode))
+						}
 					}
 				}
 			}
@@ -117,8 +119,10 @@ func getPathsNext(root, path string) []string {
 		return paths
 	}
 
-	if info, err := os.Stat(root); err == nil {
-		return []string{normalizePath(root, info.Mode())}
+	if abs, err := filepath.Abs(root); err == nil {
+		if info, err := os.Stat(abs); err == nil {
+			return []string{normalizePath(abs, info.Mode())}
+		}
 	}
 	return []string{}
 }
@@ -127,8 +131,8 @@ func getRoots(rootDir string) []string {
 	if len(rootDir) == 0 {
 		return []string{""}
 	}
-	if strings.HasSuffix(rootDir, "/") {
-		rootDir = rootDir[:len(rootDir)-1]
+	if abs, err := filepath.Abs(rootDir); err == nil {
+		rootDir = abs
 	}
 	roots := []string{}
 	if paths, err := filepath.Glob(rootDir); err == nil {
@@ -142,18 +146,15 @@ func getRoots(rootDir string) []string {
 }
 
 func walkDir(root string) []string {
-	paths := &[]string{}
+	paths := []string{}
 	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return nil
-		}
-		if info.IsDir() {
+		if err == nil && info.IsDir() {
 			normalizePath(path, info.Mode())
-			*paths = append(*paths, filepath.ToSlash(normalizePath(path, info.Mode())))
+			paths = append(paths, filepath.ToSlash(normalizePath(path, info.Mode())))
 		}
 		return nil
 	})
-	return *paths
+	return paths
 }
 
 func normalizePath(path string, mode os.FileMode) string {
@@ -169,28 +170,28 @@ func removeDuplicate(paths []string, opt *SearchOption) []string {
 		return paths
 	}
 	pathMap := make(map[string]struct{})
+	cwd, _ := os.Getwd()
 	for _, path := range paths {
-		if opt.absPath {
-			if abs, err := filepath.Abs(path); err == nil {
-				path = abs
+		if !opt.absPath {
+			if re, err := filepath.Rel(cwd, path); err == nil {
+				if info, err := os.Stat(re); err == nil {
+					path = normalizePath(re, info.Mode())
+				}
 			}
 		}
 		if strings.HasSuffix(path, string(filepath.Separator)) {
 			if opt.enableDir {
-				if opt.toSlash {
-					path = filepath.ToSlash(path)
-				}
 				pathMap[path] = struct{}{}
 			}
 		} else if opt.enableFile {
-			if opt.toSlash {
-				path = filepath.ToSlash(path)
-			}
 			pathMap[path] = struct{}{}
 		}
 	}
 	unqPaths := make([]string, 0, len(pathMap))
 	for path := range pathMap {
+		if opt.toSlash {
+			path = filepath.ToSlash(path)
+		}
 		unqPaths = append(unqPaths, path)
 	}
 	sort.Strings(unqPaths)
