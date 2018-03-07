@@ -96,6 +96,15 @@ func main() {
 }
 ```
 
+### Search Files and Directories (w/ Wildcard)
+
+```go
+result := Search("**/*.[ch]", NewSearchOption(WithToSlash(true)))
+fmt.Println(result)
+// Output:
+// [testdata/include/source.h testdata/source.c]
+```
+
 [gocli]: https://github.com/spiegel-im-spiegel/gocli "spiegel-im-spiegel/gocli: Make Link with Markdown Format"
 [dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
 [Context]: https://golang.org/pkg/context/ "context - The Go Programming Language"
