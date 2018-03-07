@@ -99,7 +99,13 @@ func main() {
 ### Search Files and Directories (w/ Wildcard)
 
 ```go
-result := Search("**/*.[ch]", NewSearchOption(WithToSlash(true)))
+import (
+	"fmt"
+
+	"github.com/spiegel-im-spiegel/gocli/file"
+)
+
+result := file.Search("**/*.[ch]", file.NewSearchOption())
 fmt.Println(result)
 // Output:
 // [testdata/include/source.h testdata/source.c]
