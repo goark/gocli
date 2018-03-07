@@ -98,11 +98,19 @@ func getPathsNext(root, path string) []string {
 	}
 
 	if len(path) > 0 {
+		dirFlag := false
+		if strings.HasSuffix(path, "/") {
+			path = path[:len(path)-1]
+			dirFlag = true
+		}
 		paths := []string{}
 		if ps, err := filepath.Glob(root + path); err == nil {
 			for _, p := range ps {
 				if info, err := os.Stat(p); err == nil {
-					paths = append(paths, normalizePath(p, info.Mode()))
+					mode := info.Mode()
+					if (dirFlag && (mode&os.ModeDir) != 0) || !dirFlag {
+						paths = append(paths, normalizePath(p, mode))
+					}
 				}
 			}
 		}
