@@ -29,7 +29,7 @@ func TestGlob(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		str := Glob(tc.path, NewGlobOption(
-			WithToSlash(true),
+			WithFlags(GlobStdFlags|GlobSeparatorSlash),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
 			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
@@ -72,9 +72,7 @@ func TestGlobFileOnly(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		str := Glob(tc.path, NewGlobOption(
-			WithToSlash(true),
-			WithEnableFile(true),
-			WithEnableDir(false),
+			WithFlags(GlobContainsFile|GlobSeparatorSlash),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
 			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
@@ -102,9 +100,7 @@ func TestGlobDirOnly(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		str := Glob(tc.path, NewGlobOption(
-			WithToSlash(true),
-			WithEnableFile(false),
-			WithEnableDir(true),
+			WithFlags(GlobContainsDir|GlobSeparatorSlash),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
 			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
@@ -123,8 +119,7 @@ func TestGlobAbs(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		str := Glob(tc.path, NewGlobOption(
-			WithToSlash(true),
-			WithAbsPath(true),
+			WithFlags(GlobStdFlags|GlobSeparatorSlash|GlobAbsolutePath),
 		))
 		if len(str) != len(tc.result) {
 			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
@@ -133,7 +128,7 @@ func TestGlobAbs(t *testing.T) {
 }
 
 func ExampleGlob() {
-	result := Glob("**/*.[ch]", NewGlobOption(WithToSlash(true)))
+	result := Glob("**/*.[ch]", NewGlobOption(WithFlags(GlobStdFlags|GlobSeparatorSlash)))
 	fmt.Println(result)
 	// Output:
 	// [testdata/include/source.h testdata/source.c]

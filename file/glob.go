@@ -11,55 +11,63 @@ import (
 	"strings"
 )
 
-//GlobOption is setting for Glob() function
-type GlobOption struct {
-	enableFile bool
-	enableDir  bool
-	toSlash    bool
-	absPath    bool
+//GlobFlag is type of operation flag in Glob() function.
+type GlobFlag uint
+
+//Operation flag in Glob() function.
+const (
+	GlobContainsFile GlobFlag = 1 << iota
+	GlobContainsDir
+	GlobSeparatorSlash
+	GlobAbsolutePath
+	GlobStdFlags = GlobContainsFile | GlobContainsDir
+)
+
+//ContainsFile returns status of GlobContainsFile.
+func (f GlobFlag) ContainsFile() bool {
+	return (f & GlobContainsFile) != 0
 }
 
-//GlogOptFunc is self-referential function for functional options pattern
+//ContainsDir returns status of GlobContainsDir.
+func (f GlobFlag) ContainsDir() bool {
+	return (f & GlobContainsDir) != 0
+}
+
+//SeparatorSlash returns status of GlobSeparatorSlash.
+func (f GlobFlag) SeparatorSlash() bool {
+	return (f & GlobSeparatorSlash) != 0
+}
+
+//AbsolutePath returns status of GlobAbsolutePath.
+func (f GlobFlag) AbsolutePath() bool {
+	return (f & GlobAbsolutePath) != 0
+}
+
+//GlobOption is setting for Glob() function.
+type GlobOption struct {
+	flags GlobFlag
+}
+
+//GlogOptFunc is self-referential function for functional options pattern.
 type GlogOptFunc func(*GlobOption)
 
 //NewGlobOption returns GlobOption instance
 func NewGlobOption(opts ...GlogOptFunc) *GlobOption {
-	o := &GlobOption{enableFile: true, enableDir: true, toSlash: false, absPath: false}
+	o := &GlobOption{flags: GlobStdFlags}
 	for _, opt := range opts {
 		opt(o)
 	}
 	return o
 }
 
-//WithEnableFile returns function for setting GlobOption
-func WithEnableFile(b bool) GlogOptFunc {
+//WithFlags returns function for setting GlobOption.
+func WithFlags(f GlobFlag) GlogOptFunc {
 	return func(o *GlobOption) {
-		o.enableFile = b
+		o.flags = f
 	}
 }
 
-//WithEnableDir returns function for setting GlobOption
-func WithEnableDir(b bool) GlogOptFunc {
-	return func(o *GlobOption) {
-		o.enableDir = b
-	}
-}
-
-//WithToSlash returns function for setting GlobOption
-func WithToSlash(b bool) GlogOptFunc {
-	return func(o *GlobOption) {
-		o.toSlash = b
-	}
-}
-
-//WithAbsPath returns function for setting GlobOption
-func WithAbsPath(b bool) GlogOptFunc {
-	return func(o *GlobOption) {
-		o.absPath = b
-	}
-}
-
-//Glob returns an array containing the matching directory/file names..
+//Glob returns an array containing the matching directory/file names.
 func Glob(path string, opt *GlobOption) []string {
 	if path == "" {
 		return []string{}
@@ -182,21 +190,23 @@ func removeDuplicate(paths []string, opt *GlobOption) []string {
 			absPath = ""
 		} else if info, err := os.Stat(absPath); err == nil {
 			absPath = normalizePath(absPath, info.Mode())
-			if opt.absPath {
+			if opt.flags.AbsolutePath() {
 				path = absPath
 			}
 		}
-		if strings.HasSuffix(absPath, string(filepath.Separator)) {
-			if opt.enableDir {
+		if len(absPath) > 0 {
+			if strings.HasSuffix(absPath, string(filepath.Separator)) {
+				if opt.flags.ContainsDir() {
+					pathMap[absPath] = path
+				}
+			} else if opt.flags.ContainsFile() {
 				pathMap[absPath] = path
 			}
-		} else if opt.enableFile {
-			pathMap[absPath] = path
 		}
 	}
 	unqPaths := make([]string, 0, len(pathMap))
 	for _, path := range pathMap {
-		if opt.toSlash {
+		if opt.flags.SeparatorSlash() {
 			path = filepath.ToSlash(path)
 		}
 		unqPaths = append(unqPaths, path)
