@@ -37,6 +37,22 @@ func TestSearch(t *testing.T) {
 	}
 }
 
+func TestSearchNil(t *testing.T) {
+	testCases := []struct {
+		path   string
+		result []string
+	}{
+		{path: "", result: []string{}},
+		{path: "*.go", result: []string{"search.go", "search_test.go"}},
+	}
+	for _, tc := range testCases {
+		str := Search(tc.path, nil)
+		if !reflect.DeepEqual(str, tc.result) {
+			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+		}
+	}
+}
+
 func TestSearchFileOnly(t *testing.T) {
 	testCases := []struct {
 		path   string

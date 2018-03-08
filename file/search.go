@@ -57,6 +57,12 @@ func WithAbsPath(b bool) SrchOptFunc {
 
 //Search returns a list of search results.
 func Search(path string, opt *SearchOption) []string {
+	if path == "" {
+		return []string{}
+	}
+	if opt == nil {
+		opt = NewSearchOption()
+	}
 	return removeDuplicate(getPaths("", path), opt)
 }
 
