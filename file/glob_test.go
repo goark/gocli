@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestSearch(t *testing.T) {
+func TestGlob(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -14,12 +14,12 @@ func TestSearch(t *testing.T) {
 		{path: "XXX/**/", result: []string{}},
 		{path: "**/", result: []string{"./", "testdata/", "testdata/include/"}},
 		{path: "*/", result: []string{"testdata/"}},
-		{path: "**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
-		{path: "**/**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "**/**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
 		{path: "./**/", result: []string{"./", "testdata/", "testdata/include/"}},
 		{path: "./*/*", result: []string{"testdata/include/", "testdata/source.c"}},
-		{path: "./**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
-		{path: "./**/**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
 		{path: "test*", result: []string{"testdata/"}},
 		{path: "test*/", result: []string{"testdata/"}},
 		{path: "test*/**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
@@ -28,32 +28,32 @@ func TestSearch(t *testing.T) {
 		{path: "**/../**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
+		str := Glob(tc.path, NewGlobOption(
 			WithToSlash(true),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func TestSearchNil(t *testing.T) {
+func TestGlobNil(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
 	}{
 		{path: "", result: []string{}},
-		{path: "*.go", result: []string{"search.go", "search_test.go"}},
+		{path: "*.go", result: []string{"glob.go", "glob_test.go"}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, nil)
+		str := Glob(tc.path, nil)
 		if !reflect.DeepEqual(str, tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func TestSearchFileOnly(t *testing.T) {
+func TestGlobFileOnly(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -61,7 +61,7 @@ func TestSearchFileOnly(t *testing.T) {
 		{path: "XXX/**/", result: []string{}},
 		{path: "**/", result: []string{}},
 		{path: "./*/*", result: []string{"testdata/source.c"}},
-		{path: "./**/*", result: []string{"search.go", "search_test.go", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/*", result: []string{"glob.go", "glob_test.go", "testdata/include/source.h", "testdata/source.c"}},
 		{path: "test*", result: []string{}},
 		{path: "test*/", result: []string{}},
 		{path: "test*/**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
@@ -71,18 +71,18 @@ func TestSearchFileOnly(t *testing.T) {
 		{path: "**/../**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
+		str := Glob(tc.path, NewGlobOption(
 			WithToSlash(true),
 			WithEnableFile(true),
 			WithEnableDir(false),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func TestSearchDirOnly(t *testing.T) {
+func TestGlobDirOnly(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -101,18 +101,18 @@ func TestSearchDirOnly(t *testing.T) {
 		{path: "test*/**/XXX", result: []string{}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
+		str := Glob(tc.path, NewGlobOption(
 			WithToSlash(true),
 			WithEnableFile(false),
 			WithEnableDir(true),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func TestSearchAbs(t *testing.T) {
+func TestGlobAbs(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -122,18 +122,18 @@ func TestSearchAbs(t *testing.T) {
 		{path: "**/*.[ch]", result: []string{"/path/to/file/testdata/include/source.h", "/path/to/file/testdata/source.c"}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
+		str := Glob(tc.path, NewGlobOption(
 			WithToSlash(true),
 			WithAbsPath(true),
 		))
 		if len(str) != len(tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func ExampleSearch() {
-	result := Search("**/*.[ch]", NewSearchOption(WithToSlash(true)))
+func ExampleGlob() {
+	result := Glob("**/*.[ch]", NewGlobOption(WithToSlash(true)))
 	fmt.Println(result)
 	// Output:
 	// [testdata/include/source.h testdata/source.c]

@@ -1,4 +1,4 @@
-// Package file : Searching files and directories
+// Package file : Operating files and directories
 //
 // These codes are licensed under CC0.
 // http://creativecommons.org/publicdomain/zero/1.0/
@@ -11,61 +11,61 @@ import (
 	"strings"
 )
 
-//SearchOption is setting for Search() function
-type SearchOption struct {
+//GlobOption is setting for Glob() function
+type GlobOption struct {
 	enableFile bool
 	enableDir  bool
 	toSlash    bool
 	absPath    bool
 }
 
-//SrchOptFunc is self-referential function for functional options pattern
-type SrchOptFunc func(*SearchOption)
+//GlogOptFunc is self-referential function for functional options pattern
+type GlogOptFunc func(*GlobOption)
 
-//NewSearchOption returns SearchOption instance
-func NewSearchOption(opts ...SrchOptFunc) *SearchOption {
-	o := &SearchOption{enableFile: true, enableDir: true, toSlash: false, absPath: false}
+//NewGlobOption returns GlobOption instance
+func NewGlobOption(opts ...GlogOptFunc) *GlobOption {
+	o := &GlobOption{enableFile: true, enableDir: true, toSlash: false, absPath: false}
 	for _, opt := range opts {
 		opt(o)
 	}
 	return o
 }
 
-//WithEnableFile returns function for setting SearchOption
-func WithEnableFile(b bool) SrchOptFunc {
-	return func(o *SearchOption) {
+//WithEnableFile returns function for setting GlobOption
+func WithEnableFile(b bool) GlogOptFunc {
+	return func(o *GlobOption) {
 		o.enableFile = b
 	}
 }
 
-//WithEnableDir returns function for setting SearchOption
-func WithEnableDir(b bool) SrchOptFunc {
-	return func(o *SearchOption) {
+//WithEnableDir returns function for setting GlobOption
+func WithEnableDir(b bool) GlogOptFunc {
+	return func(o *GlobOption) {
 		o.enableDir = b
 	}
 }
 
-//WithToSlash returns function for setting SearchOption
-func WithToSlash(b bool) SrchOptFunc {
-	return func(o *SearchOption) {
+//WithToSlash returns function for setting GlobOption
+func WithToSlash(b bool) GlogOptFunc {
+	return func(o *GlobOption) {
 		o.toSlash = b
 	}
 }
 
-//WithAbsPath returns function for setting SearchOption
-func WithAbsPath(b bool) SrchOptFunc {
-	return func(o *SearchOption) {
+//WithAbsPath returns function for setting GlobOption
+func WithAbsPath(b bool) GlogOptFunc {
+	return func(o *GlobOption) {
 		o.absPath = b
 	}
 }
 
-//Search returns a list of search results.
-func Search(path string, opt *SearchOption) []string {
+//Glob returns an array containing the matching directory/file names..
+func Glob(path string, opt *GlobOption) []string {
 	if path == "" {
 		return []string{}
 	}
 	if opt == nil {
-		opt = NewSearchOption()
+		opt = NewGlobOption()
 	}
 	return removeDuplicate(getPaths("", path), opt)
 }
@@ -171,7 +171,7 @@ func normalizePath(path string, mode os.FileMode) string {
 	return filepath.Clean(path) + tail
 }
 
-func removeDuplicate(paths []string, opt *SearchOption) []string {
+func removeDuplicate(paths []string, opt *GlobOption) []string {
 	if len(paths) == 0 {
 		return paths
 	}
