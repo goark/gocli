@@ -105,7 +105,7 @@ import (
 	"github.com/spiegel-im-spiegel/gocli/file"
 )
 
-result := file.Search("**/*.[ch]", file.NewSearchOption())
+result := file.Glob("**/*.[ch]", file.NewGlobOption())
 fmt.Println(result)
 // Output:
 // [testdata/include/source.h testdata/source.c]

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestUiSearch(t *testing.T) {
+func TestGlob(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -14,9 +14,12 @@ func TestUiSearch(t *testing.T) {
 		{path: "XXX/**/", result: []string{}},
 		{path: "**/", result: []string{"./", "testdata/", "testdata/include/"}},
 		{path: "*/", result: []string{"testdata/"}},
-		{path: "**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "**/**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/", result: []string{"./", "testdata/", "testdata/include/"}},
 		{path: "./*/*", result: []string{"testdata/include/", "testdata/source.c"}},
-		{path: "./**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/**/*", result: []string{"glob.go", "glob_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
 		{path: "test*", result: []string{"testdata/"}},
 		{path: "test*/", result: []string{"testdata/"}},
 		{path: "test*/**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
@@ -25,16 +28,32 @@ func TestUiSearch(t *testing.T) {
 		{path: "**/../**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
-			WithToSlash(true),
+		str := Glob(tc.path, NewGlobOption(
+			WithFlags(GlobStdFlags|GlobSeparatorSlash),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func TestUiSearchFileOnly(t *testing.T) {
+func TestGlobNil(t *testing.T) {
+	testCases := []struct {
+		path   string
+		result []string
+	}{
+		{path: "", result: []string{}},
+		{path: "*.go", result: []string{"glob.go", "glob_test.go"}},
+	}
+	for _, tc := range testCases {
+		str := Glob(tc.path, nil)
+		if !reflect.DeepEqual(str, tc.result) {
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+		}
+	}
+}
+
+func TestGlobFileOnly(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -42,7 +61,7 @@ func TestUiSearchFileOnly(t *testing.T) {
 		{path: "XXX/**/", result: []string{}},
 		{path: "**/", result: []string{}},
 		{path: "./*/*", result: []string{"testdata/source.c"}},
-		{path: "./**/*", result: []string{"search.go", "search_test.go", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/*", result: []string{"glob.go", "glob_test.go", "testdata/include/source.h", "testdata/source.c"}},
 		{path: "test*", result: []string{}},
 		{path: "test*/", result: []string{}},
 		{path: "test*/**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
@@ -52,18 +71,16 @@ func TestUiSearchFileOnly(t *testing.T) {
 		{path: "**/../**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
-			WithToSlash(true),
-			WithEnableFile(true),
-			WithEnableDir(false),
+		str := Glob(tc.path, NewGlobOption(
+			WithFlags(GlobContainsFile|GlobSeparatorSlash),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func TestUiSearchDirOnly(t *testing.T) {
+func TestGlobDirOnly(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -82,18 +99,16 @@ func TestUiSearchDirOnly(t *testing.T) {
 		{path: "test*/**/XXX", result: []string{}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
-			WithToSlash(true),
-			WithEnableFile(false),
-			WithEnableDir(true),
+		str := Glob(tc.path, NewGlobOption(
+			WithFlags(GlobContainsDir|GlobSeparatorSlash),
 		))
 		if !reflect.DeepEqual(str, tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func TestUiSearchAbs(t *testing.T) {
+func TestGlobAbs(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -103,18 +118,17 @@ func TestUiSearchAbs(t *testing.T) {
 		{path: "**/*.[ch]", result: []string{"/path/to/file/testdata/include/source.h", "/path/to/file/testdata/source.c"}},
 	}
 	for _, tc := range testCases {
-		str := Search(tc.path, NewSearchOption(
-			WithToSlash(true),
-			WithAbsPath(true),
+		str := Glob(tc.path, NewGlobOption(
+			WithFlags(GlobStdFlags|GlobSeparatorSlash|GlobAbsolutePath),
 		))
 		if len(str) != len(tc.result) {
-			t.Errorf("Search(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
+			t.Errorf("Glob(\"%s\")  = %v, want %v.", tc.path, str, tc.result)
 		}
 	}
 }
 
-func ExampleSearch() {
-	result := Search("**/*.[ch]", NewSearchOption(WithToSlash(true)))
+func ExampleGlob() {
+	result := Glob("**/*.[ch]", NewGlobOption(WithFlags(GlobStdFlags|GlobSeparatorSlash)))
 	fmt.Println(result)
 	// Output:
 	// [testdata/include/source.h testdata/source.c]
