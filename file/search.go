@@ -1,3 +1,7 @@
+// Package file : Searching files and directories
+//
+// These codes are licensed under CC0.
+// http://creativecommons.org/publicdomain/zero/1.0/
 package file
 
 import (
