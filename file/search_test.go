@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestUiSearch(t *testing.T) {
+func TestSearch(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -15,8 +15,11 @@ func TestUiSearch(t *testing.T) {
 		{path: "**/", result: []string{"./", "testdata/", "testdata/include/"}},
 		{path: "*/", result: []string{"testdata/"}},
 		{path: "**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "**/**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/", result: []string{"./", "testdata/", "testdata/include/"}},
 		{path: "./*/*", result: []string{"testdata/include/", "testdata/source.c"}},
 		{path: "./**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
+		{path: "./**/**/*", result: []string{"search.go", "search_test.go", "testdata/", "testdata/include/", "testdata/include/source.h", "testdata/source.c"}},
 		{path: "test*", result: []string{"testdata/"}},
 		{path: "test*/", result: []string{"testdata/"}},
 		{path: "test*/**/*.[ch]", result: []string{"testdata/include/source.h", "testdata/source.c"}},
@@ -34,7 +37,7 @@ func TestUiSearch(t *testing.T) {
 	}
 }
 
-func TestUiSearchFileOnly(t *testing.T) {
+func TestSearchFileOnly(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -63,7 +66,7 @@ func TestUiSearchFileOnly(t *testing.T) {
 	}
 }
 
-func TestUiSearchDirOnly(t *testing.T) {
+func TestSearchDirOnly(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
@@ -93,7 +96,7 @@ func TestUiSearchDirOnly(t *testing.T) {
 	}
 }
 
-func TestUiSearchAbs(t *testing.T) {
+func TestSearchAbs(t *testing.T) {
 	testCases := []struct {
 		path   string
 		result []string
