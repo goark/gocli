@@ -1,13 +1,6 @@
 package exitcode
 
-import (
-	"testing"
-)
-
-type ecodeTestCase struct { //Test case for ExitCode
-	ec  ExitCode
-	str string
-}
+import "testing"
 
 func TestExitCode(t *testing.T) {
 	testCases := []struct { //Test case for ExitCode
