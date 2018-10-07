@@ -2,20 +2,13 @@
 
 [![Build Status](https://travis-ci.org/spiegel-im-spiegel/gocli.svg?branch=master)](https://travis-ci.org/spiegel-im-spiegel/gocli)
 [![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/gocli/master/LICENSE)
+[![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/gocli.svg)](https://github.com/spiegel-im-spiegel/gocli/releases/latest)
 
-## Install
+## Declare [gocli] module
 
-```
-$ go get -u github.com/spiegel-im-spiegel/gocli
-```
+See [go.mod](https://github.com/spiegel-im-spiegel/gocli/blob/master/go.mod) file. 
 
-Installing by [dep].
-
-```
-$ dep ensure -add github.com/spiegel-im-spiegel/gocli
-```
-
-## Example
+## Usage of [gocli] package
 
 ```go
 package main
@@ -47,52 +40,52 @@ func main() {
 package main
 
 import (
-	"context"
-	"fmt"
-	"os"
-	"time"
+    "context"
+    "fmt"
+    "os"
+    "time"
 
-	"github.com/spiegel-im-spiegel/gocli/signal"
+    "github.com/spiegel-im-spiegel/gocli/signal"
 )
 
 func ticker(ctx context.Context) error {
-	t := time.NewTicker(1 * time.Second) // 1 second cycle
-	defer t.Stop()
+    t := time.NewTicker(1 * time.Second) // 1 second cycle
+    defer t.Stop()
 
-	for {
-		select {
-		case now := <-t.C: // ticker event
-			fmt.Println(now.Format(time.RFC3339))
-		case <-ctx.Done(): // cancel event from context
-			fmt.Println("Stop ticker")
-			return ctx.Err()
-		}
-	}
+    for {
+        select {
+        case now := <-t.C: // ticker event
+            fmt.Println(now.Format(time.RFC3339))
+        case <-ctx.Done(): // cancel event from context
+            fmt.Println("Stop ticker")
+            return ctx.Err()
+        }
+    }
 }
 
 func Run() error {
-	errCh := make(chan error, 1)
-	defer close(errCh)
+    errCh := make(chan error, 1)
+    defer close(errCh)
 
-	go func() {
-		child, cancelChild := context.WithTimeout(
-			signal.Context(context.Background(), os.Interrupt), // cancel event by SIGNAL
-			10*time.Second,                                     // timeout after 10 seconds
-		)
-		defer cancelChild()
-		errCh <- ticker(child)
-	}()
+    go func() {
+        child, cancelChild := context.WithTimeout(
+            signal.Context(context.Background(), os.Interrupt), // cancel event by SIGNAL
+            10*time.Second,                                     // timeout after 10 seconds
+        )
+        defer cancelChild()
+        errCh <- ticker(child)
+    }()
 
-	err := <-errCh
-	fmt.Println("Done")
-	return err
+    err := <-errCh
+    fmt.Println("Done")
+    return err
 }
 
 func main() {
-	if err := Run(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return
-	}
+    if err := Run(); err != nil {
+        fmt.Fprintln(os.Stderr, err)
+        return
+    }
 }
 ```
 
@@ -100,9 +93,9 @@ func main() {
 
 ```go
 import (
-	"fmt"
+    "fmt"
 
-	"github.com/spiegel-im-spiegel/gocli/file"
+    "github.com/spiegel-im-spiegel/gocli/file"
 )
 
 result := file.Glob("**/*.[ch]", file.NewGlobOption())
