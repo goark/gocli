@@ -16,7 +16,7 @@ func Context(parent context.Context, sig ...os.Signal) context.Context {
 	go func() {
 		defer cancel()
 
-		sigCh := make(chan os.Signal)
+		sigCh := make(chan os.Signal, 1)
 		signl.Notify(sigCh, sig...)
 		defer signl.Stop(sigCh)
 

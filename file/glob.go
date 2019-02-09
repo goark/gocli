@@ -161,7 +161,7 @@ func getRoots(rootDir string) []string {
 
 func walkDir(root string) []string {
 	paths := []string{}
-	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(root, func(path string, info os.FileInfo, err error) error { // return code is always nil
 		if err == nil && info.IsDir() {
 			normalizePath(path, info.Mode())
 			paths = append(paths, filepath.ToSlash(normalizePath(path, info.Mode())))
