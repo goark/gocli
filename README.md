@@ -104,6 +104,49 @@ fmt.Println(result)
 // [testdata/include/source.h testdata/source.c]
 ```
 
+### Interactive Mode in CUI
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/spiegel-im-spiegel/gocli/prompt"
+	"github.com/spiegel-im-spiegel/gocli/rwi"
+)
+
+func main() {
+	p := prompt.New(
+		rwi.New(
+			rwi.WithReader(os.Stdin),
+			rwi.WithWriter(os.Stdout),
+			rwi.WithErrorWriter(os.Stderr),
+		),
+		func(s string) (string, error) {
+			if s == "q" || s == "quit" {
+				return s, prompt.ErrTerminate
+			}
+			runes := []rune(s)
+			for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+				runes[i], runes[j] = runes[j], runes[i]
+			}
+			return string(runes), nil
+		},
+		prompt.WithPromptString("Sample> "),
+		prompt.WithHeaderMessage("Input 'q' or 'quit' to stop"),
+	)
+	if !p.IsTerminal() {
+		fmt.Fprintln(os.Stderr, "not terminal (or pipe?)")
+		return
+	}
+	if err := p.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+}
+```
+
 [gocli]: https://github.com/spiegel-im-spiegel/gocli "spiegel-im-spiegel/gocli: Make Link with Markdown Format"
 [dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
 [Context]: https://golang.org/pkg/context/ "context - The Go Programming Language"
