@@ -11,7 +11,7 @@ import (
 var (
 	testLogic = func(s string) (string, error) {
 		if s == "q" || s == "quit" {
-			return s, ErrTerminate
+			return "quit", ErrTerminate
 		}
 		runes := []rune(s)
 		for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
@@ -35,7 +35,7 @@ func TestIsNotTeminal(t *testing.T) {
 
 func TestRun(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	outputMsg := "fedcba\n\n"
+	outputMsg := "fedcba\nquit\n"
 	ui := rwi.New(
 		rwi.WithReader(strings.NewReader(inputMsg)),
 		rwi.WithWriter(outBuf),
@@ -53,7 +53,7 @@ func TestRun(t *testing.T) {
 
 func TestRunCustom(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	outputMsg := "Input 'q' or 'quit' to stop\nTest> fedcba\nTest> \n"
+	outputMsg := "Input 'q' or 'quit' to stop\nTest> fedcba\nTest> quit\n"
 	ui := rwi.New(
 		rwi.WithReader(strings.NewReader(inputMsg)),
 		rwi.WithWriter(outBuf),
@@ -69,6 +69,28 @@ func TestRunCustom(t *testing.T) {
 		result := outBuf.String()
 		if result != outputMsg {
 			t.Errorf("output of Prompt.Run = \"%s\", want \"%s\".", result, outputMsg)
+		}
+	}
+}
+
+func TestOnce(t *testing.T) {
+	outBuf := new(bytes.Buffer)
+	outputMsg := "Input string\nTest> fedcba\n"
+	ui := rwi.New(
+		rwi.WithReader(strings.NewReader(inputMsg)),
+		rwi.WithWriter(outBuf),
+	)
+	p := New(ui,
+		testLogic,
+		WithPromptString("Test> "),
+		WithHeaderMessage("Input string"),
+	)
+	if err := p.Once(); err != nil {
+		t.Errorf("Prompt.Once = %v, want nil.", err)
+	} else {
+		result := outBuf.String()
+		if result != outputMsg {
+			t.Errorf("output of Prompt.Once = \"%s\", want \"%s\".", result, outputMsg)
 		}
 	}
 }

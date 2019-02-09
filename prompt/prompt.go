@@ -14,10 +14,6 @@ import (
 	"github.com/spiegel-im-spiegel/gocli/rwi"
 )
 
-const (
-	headerStr = "Input 'q' or 'quit' to stop"
-)
-
 //Prompt is a class for interactive mode in CUI shell
 type Prompt struct {
 	rw        *rwi.RWI
@@ -78,7 +74,7 @@ func (p *Prompt) Run() error {
 		return ErrTerminate
 	}
 	if len(p.headerMsg) > 0 {
-		if err := p.rw.Outputln(headerStr); err != nil {
+		if err := p.rw.Outputln(p.headerMsg); err != nil {
 			return err
 		}
 	}
@@ -89,7 +85,7 @@ func (p *Prompt) Run() error {
 			break
 		}
 		if res, err := p.function(s); err != nil {
-			_ = p.rw.Outputln()
+			_ = p.rw.Outputln(res)
 			if err != ErrTerminate {
 				return err
 			}
@@ -100,6 +96,37 @@ func (p *Prompt) Run() error {
 	}
 
 	if err := p.scanner.Err(); err != nil {
+		return err
+	}
+	return nil
+}
+
+//Once function starts interactive mode (one round).
+func (p *Prompt) Once() error {
+	if p == nil {
+		return ErrTerminate
+	}
+	if len(p.headerMsg) > 0 {
+		if err := p.rw.Outputln(p.headerMsg); err != nil {
+			return err
+		}
+	}
+
+	s, ok := p.get()
+	if !ok {
+		return ErrTerminate
+	}
+	if err := p.scanner.Err(); err != nil {
+		return err
+	}
+
+	if res, err := p.function(s); err != nil {
+		_ = p.rw.Outputln(res)
+		if err != ErrTerminate {
+			return err
+		}
+		return nil
+	} else if err := p.rw.Outputln(res); err != nil {
 		return err
 	}
 	return nil
