@@ -11,7 +11,7 @@ import (
 var (
 	testLogic = func(s string) (string, error) {
 		if s == "q" || s == "quit" {
-			return "quit", ErrTerminate
+			return "quit prompt", ErrTerminate
 		}
 		runes := []rune(s)
 		for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
@@ -35,7 +35,7 @@ func TestIsNotTeminal(t *testing.T) {
 
 func TestRun(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	outputMsg := "fedcba\nquit\n"
+	outputMsg := "fedcba\nquit prompt\n"
 	ui := rwi.New(
 		rwi.WithReader(strings.NewReader(inputMsg)),
 		rwi.WithWriter(outBuf),
@@ -53,7 +53,7 @@ func TestRun(t *testing.T) {
 
 func TestRunCustom(t *testing.T) {
 	outBuf := new(bytes.Buffer)
-	outputMsg := "Input 'q' or 'quit' to stop\nTest> fedcba\nTest> quit\n"
+	outputMsg := "Input 'q' or 'quit' to stop\nTest> fedcba\nTest> quit prompt\n"
 	ui := rwi.New(
 		rwi.WithReader(strings.NewReader(inputMsg)),
 		rwi.WithWriter(outBuf),

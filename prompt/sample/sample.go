@@ -17,7 +17,7 @@ func main() {
 		),
 		func(s string) (string, error) {
 			if s == "q" || s == "quit" {
-				return s, prompt.ErrTerminate
+				return "quit prompt", prompt.ErrTerminate
 			}
 			runes := []rune(s)
 			for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
