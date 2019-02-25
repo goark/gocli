@@ -6,7 +6,6 @@ package prompt
 
 import (
 	"bufio"
-	"errors"
 	"os"
 	"strings"
 
@@ -22,10 +21,6 @@ type Prompt struct {
 	promptStr string
 	scanner   *bufio.Scanner
 }
-
-var (
-	ErrTerminate = errors.New("terminate prompt")
-)
 
 //OptFunc is self-referential function for functional options pattern
 type OptFunc func(*Prompt)
@@ -136,8 +131,8 @@ func (p *Prompt) get() (string, bool) {
 	if len(p.promptStr) > 0 {
 		_ = p.rw.Output(p.promptStr)
 	}
-	if p.scanner.Scan() {
-		return strings.Trim(p.scanner.Text(), "\t "), true
+	if !p.scanner.Scan() {
+		return "", false
 	}
-	return "", false
+	return strings.Trim(p.scanner.Text(), "\t "), true
 }
