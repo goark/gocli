@@ -11,6 +11,7 @@ import (
 
 	isatty "github.com/mattn/go-isatty"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
+	errors "golang.org/x/xerrors"
 )
 
 //Prompt is a class for interactive mode in CUI shell
@@ -81,7 +82,7 @@ func (p *Prompt) Run() error {
 		}
 		if res, err := p.function(s); err != nil {
 			_ = p.rw.Outputln(res)
-			if err != ErrTerminate {
+			if !errors.Is(err, ErrTerminate) {
 				return err
 			}
 			return nil
@@ -117,7 +118,7 @@ func (p *Prompt) Once() error {
 
 	if res, err := p.function(s); err != nil {
 		_ = p.rw.Outputln(res)
-		if err != ErrTerminate {
+		if !errors.Is(err, ErrTerminate) {
 			return err
 		}
 		return nil
