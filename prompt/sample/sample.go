@@ -29,7 +29,7 @@ func main() {
 		prompt.WithHeaderMessage("Input 'q' or 'quit' to stop"),
 	)
 	if !p.IsTerminal() {
-		fmt.Fprintln(os.Stderr, "not terminal (or pipe?)")
+		fmt.Fprintln(os.Stderr, prompt.ErrNotTerminal)
 		return
 	}
 	if err := p.Run(); err != nil {

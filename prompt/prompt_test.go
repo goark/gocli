@@ -42,7 +42,7 @@ func TestRun(t *testing.T) {
 	)
 	p := New(ui, testLogic)
 	if err := p.Run(); err != nil {
-		t.Errorf("Prompt.Run = %v, want nil.", err)
+		t.Errorf("Prompt.Run = %+v, want nil.", err)
 	} else {
 		result := outBuf.String()
 		if result != outputMsg {
@@ -64,7 +64,7 @@ func TestRunCustom(t *testing.T) {
 		WithHeaderMessage("Input 'q' or 'quit' to stop"),
 	)
 	if err := p.Run(); err != nil {
-		t.Errorf("Prompt.Run = %v, want nil.", err)
+		t.Errorf("Prompt.Run = %+v, want nil.", err)
 	} else {
 		result := outBuf.String()
 		if result != outputMsg {
@@ -86,7 +86,7 @@ func TestOnce(t *testing.T) {
 		WithHeaderMessage("Input string"),
 	)
 	if err := p.Once(); err != nil {
-		t.Errorf("Prompt.Once = %v, want nil.", err)
+		t.Errorf("Prompt.Once = %+v, want nil.", err)
 	} else {
 		result := outBuf.String()
 		if result != outputMsg {

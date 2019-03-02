@@ -11,10 +11,12 @@ type Errno int
 
 const (
 	ErrTerminate Errno = iota + 1
+	ErrNotTerminal
 )
 
 var errMessage = map[Errno]string{
-	ErrTerminate: "terminate prompt",
+	ErrTerminate:   "terminate prompt",
+	ErrNotTerminal: "not terminal (or pipe?)",
 }
 
 func (n Errno) Error() string {
