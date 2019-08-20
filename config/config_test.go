@@ -18,8 +18,10 @@ func TestConfigPathXDG(t *testing.T) {
 		{appName: "../foo", fileName: "bar", path: ""},
 		{appName: "foo", fileName: "baa/bar", path: ""},
 	}
-	os.Setenv("HOME", "home")
-	os.Setenv("XDG_CONFIG_HOME", "xdg")
+	reset1 := setTestEnv("HOME", "home")
+	defer reset1()
+	reset2 := setTestEnv("XDG_CONFIG_HOME", "xdg")
+	defer reset2()
 	for _, tc := range testCases {
 		path := Path(tc.appName, tc.fileName)
 		if path != tc.path {
@@ -41,8 +43,10 @@ func TestConfigPathHome(t *testing.T) {
 		{appName: "../foo", fileName: "bar", path: ""},
 		{appName: "foo", fileName: "bar/bar", path: ""},
 	}
-	os.Setenv("HOME", "home")
-	os.Unsetenv("XDG_CONFIG_HOME")
+	reset1 := setTestEnv("HOME", "home")
+	defer reset1()
+	reset2 := unsetTestEnv("XDG_CONFIG_HOME")
+	defer reset2()
 	for _, tc := range testCases {
 		path := Path(tc.appName, tc.fileName)
 		if path != tc.path {
@@ -64,12 +68,30 @@ func TestConfigNoHome(t *testing.T) {
 		{appName: "../foo", fileName: "bar", path: ""},
 		{appName: "foo", fileName: "bar/bar", path: ""},
 	}
-	os.Unsetenv("HOME")
-	os.Unsetenv("XDG_CONFIG_HOME")
+	reset1 := unsetTestEnv("HOME")
+	defer reset1()
+	reset2 := unsetTestEnv("XDG_CONFIG_HOME")
+	defer reset2()
 	for _, tc := range testCases {
 		path := Path(tc.appName, tc.fileName)
 		if path != tc.path {
 			t.Errorf("GetConfigPath(\"%v\", \"%v\")  is \"%v\", watnt \"%v\".", tc.appName, tc.fileName, path, tc.path)
 		}
+	}
+}
+
+func setTestEnv(key, val string) func() {
+	preVal := os.Getenv(key)
+	os.Setenv(key, val)
+	return func() {
+		os.Setenv(key, preVal)
+	}
+}
+
+func unsetTestEnv(key string) func() {
+	preVal := os.Getenv(key)
+	os.Unsetenv(key)
+	return func() {
+		os.Setenv(key, preVal)
 	}
 }
