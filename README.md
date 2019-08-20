@@ -104,6 +104,23 @@ fmt.Println(result)
 // [testdata/include/source.h testdata/source.c]
 ```
 
+### Configuration file and directory
+
+Support `$XDG_CONFIG_HOME` environment value (XDG Base Directory)
+
+```go
+import (
+    "fmt"
+
+    "github.com/spiegel-im-spiegel/gocli/config"
+)
+
+path := config.Path("app", "config.json")
+fmt.Println(path)
+// Output:
+// /home/username/.config/app/config.json
+```
+
 [gocli]: https://github.com/spiegel-im-spiegel/gocli "spiegel-im-spiegel/gocli: Make Link with Markdown Format"
 [dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
 [Context]: https://golang.org/pkg/context/ "context - The Go Programming Language"
