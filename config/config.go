@@ -7,7 +7,6 @@ package config
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
@@ -27,12 +26,11 @@ func Dir(appName string) string {
 	if includeSlash(appName) {
 		return ""
 	}
-	dir := XDGConfigHome()
-	if len(dir) == 0 {
-		dir = WindowsAppDataDir()
+	dir, err := os.UserConfigDir()
+	if err != nil {
+		dir = ""
 	}
 	if len(dir) == 0 {
-		var err error
 		dir, err = os.UserHomeDir()
 		if err != nil {
 			dir = ""
@@ -42,23 +40,6 @@ func Dir(appName string) string {
 		return ""
 	}
 	return filepath.Join(dir, appName)
-}
-
-//XDGConfigHome returns $XDG_CONFIG_HOME directory
-func XDGConfigHome() string {
-	return os.Getenv("XDG_CONFIG_HOME")
-}
-
-//WindowsAppDataDir returns %APPDATA% directory if Windows
-func WindowsAppDataDir() string {
-	if runtime.GOOS == "windows" {
-		appDir := os.Getenv("HOME")
-		if len(appDir) == 0 {
-			return os.Getenv("APPDATA")
-		}
-		return appDir
-	}
-	return ""
 }
 
 func includeSlash(path string) bool {
