@@ -27,17 +27,8 @@ func Dir(appName string) string {
 		return ""
 	}
 	dir, err := os.UserConfigDir()
-	if err != nil {
+	if err != nil || len(dir) == 0 {
 		dir = ""
-	}
-	if len(dir) == 0 {
-		dir, err = os.UserHomeDir()
-		if err != nil {
-			dir = ""
-		}
-	}
-	if len(dir) == 0 {
-		return ""
 	}
 	return filepath.Join(dir, appName)
 }
