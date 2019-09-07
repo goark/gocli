@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/spiegel-im-spiegel/gocli.svg?branch=master)](https://travis-ci.org/spiegel-im-spiegel/gocli)
 [![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/gocli/master/LICENSE)
-[![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/gocli.svg)](https://github.com/spiegel-im-spiegel/gocli/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/spiegel-im-spiegel/gocli.svg)](https://github.com/spiegel-im-spiegel/gocli/releases/latest)
 
 ## Declare [gocli] module
 
@@ -14,7 +14,7 @@ See [go.mod](https://github.com/spiegel-im-spiegel/gocli/blob/master/go.mod) fil
 package main
 
 import (
-    "fmt"
+    "os"
 
     "github.com/spiegel-im-spiegel/gocli/exitcode"
     "github.com/spiegel-im-spiegel/gocli/rwi"
@@ -70,7 +70,7 @@ func Run() error {
     go func() {
         child, cancelChild := context.WithTimeout(
             signal.Context(context.Background(), os.Interrupt), // cancel event by SIGNAL
-            10*time.Second,                                     // timeout after 10 seconds
+            10*time.Second, // timeout after 10 seconds
         )
         defer cancelChild()
         errCh <- ticker(child)
