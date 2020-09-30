@@ -1,6 +1,7 @@
 # [gocli] - Minimal Packages for Command-Line Interface
 
-[![Build Status](https://travis-ci.org/spiegel-im-spiegel/gocli.svg?branch=master)](https://travis-ci.org/spiegel-im-spiegel/gocli)
+[![check vulns](https://github.com/spiegel-im-spiegel/gocli/workflows/vulns/badge.svg)](https://github.com/spiegel-im-spiegel/gocli/actions)
+[![lint status](https://github.com/spiegel-im-spiegel/gocli/workflows/lint/badge.svg)](https://github.com/spiegel-im-spiegel/gocli/actions)
 [![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/gocli/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/spiegel-im-spiegel/gocli.svg)](https://github.com/spiegel-im-spiegel/gocli/releases/latest)
 
