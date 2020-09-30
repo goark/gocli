@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+//Path returns path of Configuration file
 func Path(appName, fileName string) string {
 	if len(fileName) == 0 || includeSlash(fileName) {
 		return ""
