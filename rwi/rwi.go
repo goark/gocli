@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 )
 
 // RWI is Reader/Writer class for command-line
@@ -23,7 +22,7 @@ type OptFunc func(*RWI)
 
 // New returns a new RWI instance
 func New(opts ...OptFunc) *RWI {
-	c := &RWI{reader: ioutil.NopCloser(bytes.NewReader(nil)), writer: ioutil.Discard, errorWriter: ioutil.Discard}
+	c := &RWI{reader: io.NopCloser(bytes.NewReader(nil)), writer: io.Discard, errorWriter: io.Discard}
 	for _, opt := range opts {
 		opt(c)
 	}
