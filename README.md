@@ -5,6 +5,8 @@
 [![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/gocli/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/spiegel-im-spiegel/gocli.svg)](https://github.com/spiegel-im-spiegel/gocli/releases/latest)
 
+This package is required Go 1.16 or later.
+
 ## Declare [gocli] module
 
 See [go.mod](https://github.com/spiegel-im-spiegel/gocli/blob/master/go.mod) file. 
