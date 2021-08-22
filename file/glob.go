@@ -145,9 +145,7 @@ func getRoots(rootDir string) []string {
 	if len(rootDir) == 0 {
 		return []string{""}
 	}
-	if strings.HasSuffix(rootDir, "/") {
-		rootDir = rootDir[:len(rootDir)-1]
-	}
+	rootDir = strings.TrimSuffix(rootDir, "/")
 	roots := []string{}
 	if paths, err := filepath.Glob(rootDir); err == nil {
 		for _, path := range paths {
