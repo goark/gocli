@@ -1,17 +1,17 @@
-package config_test
+package cache_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/gocli/config"
+	"github.com/spiegel-im-spiegel/gocli/cache"
 )
 
-func TestConfigPath(t *testing.T) {
-	dir, err := os.UserConfigDir()
+func TestCachePath(t *testing.T) {
+	dir, err := os.UserCacheDir()
 	if err != nil {
-		t.Errorf("os.UserConfigDir() is \"%v\", want nil error.", err)
+		t.Errorf("os.UserConfigDir() error is \"%v\", want nil error.", err)
 	}
 	testCases := []struct {
 		appName  string
@@ -26,9 +26,9 @@ func TestConfigPath(t *testing.T) {
 		{appName: "foo", fileName: "bar/bar", path: ""},
 	}
 	for _, tc := range testCases {
-		path := config.Path(tc.appName, tc.fileName)
+		path := cache.Path(tc.appName, tc.fileName)
 		if path != tc.path {
-			t.Errorf("config.Path(\"%v\", \"%v\")  is \"%v\", want \"%v\".", tc.appName, tc.fileName, path, tc.path)
+			t.Errorf("cache.Path(\"%v\", \"%v\")  is \"%v\", want \"%v\".", tc.appName, tc.fileName, path, tc.path)
 		}
 	}
 }
