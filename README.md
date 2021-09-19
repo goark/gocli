@@ -124,6 +124,23 @@ fmt.Println(path)
 // /home/username/.config/app/config.json
 ```
 
+### User cache file and directory
+
+Support `$XDG_CONFIG_HOME` environment value (XDG Base Directory)
+
+```go
+import (
+    "fmt"
+
+    "github.com/spiegel-im-spiegel/gocli/cache"
+)
+
+path := cache.Path("app", "access.log")
+fmt.Println(path)
+// Output:
+// /home/username/.cache/app/access.log
+```
+
 [gocli]: https://github.com/spiegel-im-spiegel/gocli "spiegel-im-spiegel/gocli: Make Link with Markdown Format"
 [dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
 [Context]: https://golang.org/pkg/context/ "context - The Go Programming Language"
