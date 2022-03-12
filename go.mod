@@ -1,3 +1,3 @@
-module github.com/spiegel-im-spiegel/gocli
+module github.com/goark/gocli
 
 go 1.17

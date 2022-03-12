@@ -1,15 +1,17 @@
 # [gocli] - Minimal Packages for Command-Line Interface
 
-[![check vulns](https://github.com/spiegel-im-spiegel/gocli/workflows/vulns/badge.svg)](https://github.com/spiegel-im-spiegel/gocli/actions)
-[![lint status](https://github.com/spiegel-im-spiegel/gocli/workflows/lint/badge.svg)](https://github.com/spiegel-im-spiegel/gocli/actions)
-[![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/gocli/master/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/spiegel-im-spiegel/gocli.svg)](https://github.com/spiegel-im-spiegel/gocli/releases/latest)
+[![check vulns](https://github.com/goark/gocli/workflows/vulns/badge.svg)](https://github.com/goark/gocli/actions)
+[![lint status](https://github.com/goark/gocli/workflows/lint/badge.svg)](https://github.com/goark/gocli/actions)
+[![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/goark/gocli/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/goark/gocli.svg)](https://github.com/goark/gocli/releases/latest)
 
 This package is required Go 1.16 or later.
 
+**Migrated repository to [github.com/goark/gocli][gocli]**
+
 ## Declare [gocli] module
 
-See [go.mod](https://github.com/spiegel-im-spiegel/gocli/blob/master/go.mod) file. 
+See [go.mod](https://github.com/goark/gocli/blob/master/go.mod) file. 
 
 ## Usage of [gocli] package
 
@@ -19,8 +21,8 @@ package main
 import (
     "os"
 
-    "github.com/spiegel-im-spiegel/gocli/exitcode"
-    "github.com/spiegel-im-spiegel/gocli/rwi"
+    "github.com/goark/gocli/exitcode"
+    "github.com/goark/gocli/rwi"
 )
 
 func run(ui *rwi.RWI) exitcode.ExitCode {
@@ -48,7 +50,7 @@ import (
     "os"
     "time"
 
-    "github.com/spiegel-im-spiegel/gocli/signal"
+    "github.com/goark/gocli/signal"
 )
 
 func ticker(ctx context.Context) error {
@@ -98,7 +100,7 @@ func main() {
 import (
     "fmt"
 
-    "github.com/spiegel-im-spiegel/gocli/file"
+    "github.com/goark/gocli/file"
 )
 
 result := file.Glob("**/*.[ch]", file.NewGlobOption())
@@ -115,7 +117,7 @@ Support `$XDG_CONFIG_HOME` environment value (XDG Base Directory)
 import (
     "fmt"
 
-    "github.com/spiegel-im-spiegel/gocli/config"
+    "github.com/goark/gocli/config"
 )
 
 path := config.Path("app", "config.json")
@@ -132,7 +134,7 @@ Support `$XDG_CONFIG_HOME` environment value (XDG Base Directory)
 import (
     "fmt"
 
-    "github.com/spiegel-im-spiegel/gocli/cache"
+    "github.com/goark/gocli/cache"
 )
 
 path := cache.Path("app", "access.log")
@@ -141,6 +143,6 @@ fmt.Println(path)
 // /home/username/.cache/app/access.log
 ```
 
-[gocli]: https://github.com/spiegel-im-spiegel/gocli "spiegel-im-spiegel/gocli: Make Link with Markdown Format"
+[gocli]: https://github.com/goark/gocli "goark/gocli: Make Link with Markdown Format"
 [dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
 [Context]: https://golang.org/pkg/context/ "context - The Go Programming Language"

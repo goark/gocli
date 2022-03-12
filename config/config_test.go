@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/gocli/config"
+	"github.com/goark/gocli/config"
 )
 
 func TestConfigPath(t *testing.T) {

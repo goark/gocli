@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/gocli/cache"
+	"github.com/goark/gocli/cache"
 )
 
 func TestCachePath(t *testing.T) {
