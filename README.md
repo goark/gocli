@@ -128,7 +128,7 @@ fmt.Println(path)
 
 ### User cache file and directory
 
-Support `$XDG_CONFIG_HOME` environment value (XDG Base Directory)
+Support `$XDG_CACHE_HOME` environment value (XDG Base Directory)
 
 ```go
 import (
