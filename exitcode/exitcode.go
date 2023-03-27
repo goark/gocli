@@ -6,7 +6,7 @@ package exitcode
 
 import "os"
 
-//ExitCode is OS exit code enumeration class
+// ExitCode is OS exit code enumeration class
 type ExitCode int
 
 const (
@@ -21,12 +21,19 @@ var exitcodeMap = map[ExitCode]string{
 	Abnormal: "abnormal end",
 }
 
-//Exit calls os.Exit()
+// Exit calls os.Exit()
 func (c ExitCode) Exit() {
 	os.Exit(int(c))
 }
 
-//Stringer method
+// ExitIfNotNormal calls os.Exit() if exit code is not Normal.
+func (c ExitCode) ExitIfNotNormal() {
+	if c != Normal {
+		os.Exit(int(c))
+	}
+}
+
+// Stringer method
 func (c ExitCode) String() string {
 	if str, ok := exitcodeMap[c]; ok {
 		return str
