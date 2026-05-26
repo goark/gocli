@@ -6,7 +6,7 @@
 [![GitHub release](https://img.shields.io/github/release/goark/gocli.svg)](https://github.com/goark/gocli/releases/latest)
 [![Go Reference](https://pkg.go.dev/badge/github.com/goark/gocli.svg)](https://pkg.go.dev/github.com/goark/gocli)
 
-This package requires Go 1.20 or later.
+This package requires Go 1.25 or later.
 
 ## Design goals
 

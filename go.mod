@@ -1,5 +1,5 @@
 module github.com/goark/gocli
 
-go 1.20
+go 1.25
 
 toolchain go1.26.3
