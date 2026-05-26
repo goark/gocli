@@ -4,14 +4,35 @@
 [![lint status](https://github.com/goark/gocli/workflows/lint/badge.svg)](https://github.com/goark/gocli/actions)
 [![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/goark/gocli/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/goark/gocli.svg)](https://github.com/goark/gocli/releases/latest)
+[![Go Reference](https://pkg.go.dev/badge/github.com/goark/gocli.svg)](https://pkg.go.dev/github.com/goark/gocli)
 
-This package is required Go 1.16 or later.
+This package requires Go 1.20 or later.
 
-**Migrated repository to [github.com/goark/gocli][gocli]**
+## Design goals
+
+`gocli` provides a small collection of focused sub-packages for building command-line tools in Go.
+Each package addresses a single concern:
+
+- `exitcode` — OS exit code constants and helpers
+- `rwi` — Reader/Writer interface wrapping stdin/stdout/stderr
+- `signal` — Signal handling via `context.Context`
+- `file` — File/directory globbing with wildcard support
+- `config` — XDG-aware configuration file path helpers
+- `cache` — XDG-aware cache file path helpers
+
+## Development
+
+Requires [Task] for local validation.
+
+```text
+task test
+```
+
+This runs `go mod verify`, `go test -shuffle on ./...`, and golangci-lint.
 
 ## Declare [gocli] module
 
-See [go.mod](https://github.com/goark/gocli/blob/master/go.mod) file. 
+See [go.mod](https://github.com/goark/gocli/blob/master/go.mod) file.
 
 ## Usage of [gocli] package
 
@@ -143,6 +164,6 @@ fmt.Println(path)
 // /home/username/.cache/app/access.log
 ```
 
-[gocli]: https://github.com/goark/gocli "goark/gocli: Make Link with Markdown Format"
-[dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
-[Context]: https://golang.org/pkg/context/ "context - The Go Programming Language"
+[gocli]: https://github.com/goark/gocli "goark/gocli: Minimal Packages for Command-Line Interface"
+[Context]: https://pkg.go.dev/context "context - Go Packages"
+[Task]: https://taskfile.dev "Task - A task runner / simpler Make alternative"
