@@ -41,7 +41,7 @@ func TestExit(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		cmd := exec.Command(os.Args[0], "-test.run=TestExit")
+		cmd := exec.Command(os.Args[0], "-test.run=TestExit") //nolint:gosec
 		cmd.Env = append(os.Environ(), "TEST_EXIT_CODE="+strconv.Itoa(int(tc.ec)))
 		err := cmd.Run()
 		if tc.ec == Normal {
@@ -80,7 +80,7 @@ func TestExitIfNotNormal(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		cmd := exec.Command(os.Args[0], "-test.run=TestExitIfNotNormal")
+		cmd := exec.Command(os.Args[0], "-test.run=TestExitIfNotNormal") //nolint:gosec
 		cmd.Env = append(os.Environ(), "TEST_EXIT_IF_CODE="+strconv.Itoa(int(tc.ec)))
 		err := cmd.Run()
 		if !tc.wantExt {
