@@ -1,7 +1,7 @@
 // Package rwi : Reader/Writer Interface for command-line
 //
 // These codes are licensed under CC0.
-// http://creativecommons.org/publicdomain/zero/1.0/
+// http:// creativecommons.org/publicdomain/zero/1.0/
 package rwi
 
 import (
@@ -17,7 +17,7 @@ type RWI struct {
 	errorWriter io.Writer
 }
 
-//OptFunc is self-referential function for functional options pattern
+// OptFunc is self-referential function for functional options pattern
 type OptFunc func(*RWI)
 
 // New returns a new RWI instance
@@ -29,7 +29,7 @@ func New(opts ...OptFunc) *RWI {
 	return c
 }
 
-//WithReader returns function for setting Reader
+// WithReader returns function for setting Reader
 func WithReader(r io.Reader) OptFunc {
 	return func(c *RWI) {
 		if r != nil {
@@ -38,7 +38,7 @@ func WithReader(r io.Reader) OptFunc {
 	}
 }
 
-//WithWriter returns function for setting Writer
+// WithWriter returns function for setting Writer
 func WithWriter(w io.Writer) OptFunc {
 	return func(c *RWI) {
 		if w != nil {
@@ -47,7 +47,7 @@ func WithWriter(w io.Writer) OptFunc {
 	}
 }
 
-//WithErrorWriter returns function for setting Writer (error)
+// WithErrorWriter returns function for setting Writer (error)
 func WithErrorWriter(e io.Writer) OptFunc {
 	return func(c *RWI) {
 		if e != nil {
@@ -56,70 +56,70 @@ func WithErrorWriter(e io.Writer) OptFunc {
 	}
 }
 
-//Reader returns RWI.reader
+// Reader returns RWI.reader
 func (c *RWI) Reader() io.Reader {
 	return c.reader
 }
 
-//Writer returns RWI.writer
+// Writer returns RWI.writer
 func (c *RWI) Writer() io.Writer {
 	return c.writer
 }
 
-//ErrorWriter returns RWI.errorWriter
+// ErrorWriter returns RWI.errorWriter
 func (c *RWI) ErrorWriter() io.Writer {
 	return c.errorWriter
 }
 
-//Output output to RWI.writer
+// Output output to RWI.writer
 func (c *RWI) Output(val ...interface{}) error {
 	return doOutput(c.writer, val)
 }
 
-//Outputln output to  RWI.writer (add newline).
+// Outputln output to  RWI.writer (add newline).
 func (c *RWI) Outputln(val ...interface{}) error {
 	return doOutputln(c.writer, val)
 }
 
-//OutputBytes to  RWI.writer ([]byte data).
+// OutputBytes to  RWI.writer ([]byte data).
 func (c *RWI) OutputBytes(data []byte) error {
 	return c.WriteFrom(bytes.NewReader(data))
 }
 
-//WriteFrom  copy from io.Reader to RWI.writer
+// WriteFrom  copy from io.Reader to RWI.writer
 func (c *RWI) WriteFrom(r io.Reader) error {
 	_, err := io.Copy(c.writer, r)
 	return err
 }
 
-//OutputErr output to  RWI.errorWriter
+// OutputErr output to  RWI.errorWriter
 func (c *RWI) OutputErr(val ...interface{}) error {
 	return doOutput(c.errorWriter, val)
 }
 
-//OutputErrln output to  RWI.errorWriter (add newline).
+// OutputErrln output to  RWI.errorWriter (add newline).
 func (c *RWI) OutputErrln(val ...interface{}) error {
 	return doOutputln(c.errorWriter, val)
 }
 
-//OutputErrBytes copy to  RWI.errorWriter ([]byte data).
+// OutputErrBytes copy to  RWI.errorWriter ([]byte data).
 func (c *RWI) OutputErrBytes(data []byte) error {
 	return c.WriteErrFrom(bytes.NewReader(data))
 }
 
-//WriteErrFrom copy from io.Reader to RWI.errorWriter
+// WriteErrFrom copy from io.Reader to RWI.errorWriter
 func (c *RWI) WriteErrFrom(r io.Reader) error {
 	_, err := io.Copy(c.errorWriter, r)
 	return err
 }
 
-//Output to io.Writer (internal)
+// Output to io.Writer (internal)
 func doOutput(writer io.Writer, val []interface{}) error {
 	_, err := fmt.Fprint(writer, val...)
 	return err
 }
 
-//Output to io.Writer (add newline, internal)
+// Output to io.Writer (add newline, internal)
 func doOutputln(writer io.Writer, val []interface{}) error {
 	_, err := fmt.Fprintln(writer, val...)
 	return err

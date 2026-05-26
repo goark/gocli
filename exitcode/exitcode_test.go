@@ -3,7 +3,7 @@ package exitcode
 import "testing"
 
 func TestExitCode(t *testing.T) {
-	testCases := []struct { //Test case for ExitCode
+	testCases := []struct { // Test case for ExitCode
 		ec  ExitCode
 		str string
 	}{

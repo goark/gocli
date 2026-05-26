@@ -14,7 +14,7 @@ var inputMsg string
 var lineEnding string
 
 func TestMain(m *testing.M) {
-	//initialization
+	// initialization
 	inputMsgs = []string{
 		"Take the Go-lang!",
 		"Go言語で行こう！",
@@ -26,10 +26,10 @@ func TestMain(m *testing.M) {
 		lineEnding = "\n"
 	}
 
-	//start test
+	// start test
 	code := m.Run()
 
-	//termination
+	// termination
 	os.Exit(code)
 }
 
