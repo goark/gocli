@@ -2,6 +2,9 @@
 //
 // These codes are licensed under CC0.
 // http:// creativecommons.org/publicdomain/zero/1.0/
+//
+// Deprecated: This package is deprecated. Use [os/signal.NotifyContext] instead,
+// which provides equivalent functionality as part of the Go standard library since Go 1.16.
 package signal
 
 import (
@@ -11,6 +14,8 @@ import (
 )
 
 // Context returns context.Context with Cancel
+//
+// Deprecated: Use [os/signal.NotifyContext] instead.
 func Context(parent context.Context, sig ...os.Signal) context.Context {
 	cctx, cancel := context.WithCancel(parent)
 	go func() {

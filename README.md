@@ -15,7 +15,7 @@ Each package addresses a single concern:
 
 - `exitcode` — OS exit code constants and helpers
 - `rwi` — Reader/Writer interface wrapping stdin/stdout/stderr
-- `signal` — Signal handling via `context.Context`
+- `signal` — Signal handling via `context.Context` (deprecated: use [`os/signal.NotifyContext`](https://pkg.go.dev/os/signal#NotifyContext) instead)
 - `file` — File/directory globbing with wildcard support
 - `config` — XDG-aware configuration file path helpers
 - `cache` — XDG-aware cache file path helpers
