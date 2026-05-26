@@ -1,7 +1,7 @@
 // Package exitcode : OS exit code enumeration
 //
 // These codes are licensed under CC0.
-// http://creativecommons.org/publicdomain/zero/1.0/
+// http:// creativecommons.org/publicdomain/zero/1.0/
 package exitcode
 
 import "os"
@@ -10,9 +10,9 @@ import "os"
 type ExitCode int
 
 const (
-	//Normal is OS exit code "normal"
+	// Normal is OS exit code "normal"
 	Normal ExitCode = iota
-	//Abnormal is OS exit code "abnormal"
+	// Abnormal is OS exit code "abnormal"
 	Abnormal
 )
 

@@ -1,7 +1,7 @@
 // Package signal : Handling SIGNAL with context package
 //
 // These codes are licensed under CC0.
-// http://creativecommons.org/publicdomain/zero/1.0/
+// http:// creativecommons.org/publicdomain/zero/1.0/
 package signal
 
 import (
@@ -10,7 +10,7 @@ import (
 	signl "os/signal"
 )
 
-//Context returns context.Context with Cancel
+// Context returns context.Context with Cancel
 func Context(parent context.Context, sig ...os.Signal) context.Context {
 	cctx, cancel := context.WithCancel(parent)
 	go func() {
@@ -23,7 +23,7 @@ func Context(parent context.Context, sig ...os.Signal) context.Context {
 		select {
 		case <-cctx.Done(): // cancel event from parent context
 			return
-		case <-sigCh: //catch SIGNAL
+		case <-sigCh: // catch SIGNAL
 			return
 		}
 	}()

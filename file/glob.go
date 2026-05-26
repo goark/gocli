@@ -1,7 +1,7 @@
 // Package file : Operating files and directories
 //
 // These codes are licensed under CC0.
-// http://creativecommons.org/publicdomain/zero/1.0/
+// http:// creativecommons.org/publicdomain/zero/1.0/
 package file
 
 import (
@@ -11,10 +11,10 @@ import (
 	"strings"
 )
 
-//GlobFlag is type of operation flag in Glob() function.
+// GlobFlag is type of operation flag in Glob() function.
 type GlobFlag uint
 
-//Operation flag in Glob() function.
+// Operation flag in Glob() function.
 const (
 	GlobContainsFile GlobFlag = 1 << iota
 	GlobContainsDir
@@ -23,35 +23,35 @@ const (
 	GlobStdFlags = GlobContainsFile | GlobContainsDir
 )
 
-//ContainsFile returns status of GlobContainsFile.
+// ContainsFile returns status of GlobContainsFile.
 func (f GlobFlag) ContainsFile() bool {
 	return (f & GlobContainsFile) != 0
 }
 
-//ContainsDir returns status of GlobContainsDir.
+// ContainsDir returns status of GlobContainsDir.
 func (f GlobFlag) ContainsDir() bool {
 	return (f & GlobContainsDir) != 0
 }
 
-//SeparatorSlash returns status of GlobSeparatorSlash.
+// SeparatorSlash returns status of GlobSeparatorSlash.
 func (f GlobFlag) SeparatorSlash() bool {
 	return (f & GlobSeparatorSlash) != 0
 }
 
-//AbsolutePath returns status of GlobAbsolutePath.
+// AbsolutePath returns status of GlobAbsolutePath.
 func (f GlobFlag) AbsolutePath() bool {
 	return (f & GlobAbsolutePath) != 0
 }
 
-//GlobOption is setting for Glob() function.
+// GlobOption is setting for Glob() function.
 type GlobOption struct {
 	flags GlobFlag
 }
 
-//GlogOptFunc is self-referential function for functional options pattern.
+// GlogOptFunc is self-referential function for functional options pattern.
 type GlogOptFunc func(*GlobOption)
 
-//NewGlobOption returns GlobOption instance
+// NewGlobOption returns GlobOption instance
 func NewGlobOption(opts ...GlogOptFunc) *GlobOption {
 	o := &GlobOption{flags: GlobStdFlags}
 	for _, opt := range opts {
@@ -60,14 +60,14 @@ func NewGlobOption(opts ...GlogOptFunc) *GlobOption {
 	return o
 }
 
-//WithFlags returns function for setting GlobOption.
+// WithFlags returns function for setting GlobOption.
 func WithFlags(f GlobFlag) GlogOptFunc {
 	return func(o *GlobOption) {
 		o.flags = f
 	}
 }
 
-//Glob returns an array containing the matching directory/file names.
+// Glob returns an array containing the matching directory/file names.
 func Glob(path string, opt *GlobOption) []string {
 	if path == "" {
 		return []string{}
@@ -171,7 +171,7 @@ func walkDir(root string) []string {
 
 func normalizePath(path string, mode os.FileMode) string {
 	tail := ""
-	if (mode & os.ModeDir) != 0 { //directory
+	if (mode & os.ModeDir) != 0 { // directory
 		tail = string(filepath.Separator)
 	}
 	return filepath.Clean(path) + tail
