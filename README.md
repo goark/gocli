@@ -1,7 +1,7 @@
 # [gocli] - Minimal Packages for Command-Line Interface
 
-[![check vulns](https://github.com/goark/gocli/workflows/vulns/badge.svg)](https://github.com/goark/gocli/actions)
-[![lint status](https://github.com/goark/gocli/workflows/lint/badge.svg)](https://github.com/goark/gocli/actions)
+[![CI Status](https://github.com/goark/gocli/workflows/ci/badge.svg)](https://github.com/goark/gocli/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/goark/gocli/workflows/CodeQL/badge.svg)](https://github.com/goark/gocli/actions/workflows/codeql.yml)
 [![GitHub license](https://img.shields.io/badge/license-CC0-blue.svg)](https://raw.githubusercontent.com/goark/gocli/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/goark/gocli.svg)](https://github.com/goark/gocli/releases/latest)
 [![Go Reference](https://pkg.go.dev/badge/github.com/goark/gocli.svg)](https://pkg.go.dev/github.com/goark/gocli)
